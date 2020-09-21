@@ -4,9 +4,9 @@ See: https://en.wikipedia.org/wiki/Big_two
 
 This version of Big 2 utilizes what is known to me as the vietnamese way of playing:
 - straights can vary from 3 cards to 13 cards
-- chops (consecutive pairs)
+- chops (consecutive pairs) #not yet coded
 - doubles
-- full houses
+- full houses #not yet coded
 - triples (3 of a kind)
 - 4 of a kind
 - suit order (from highest to lowest): Hearts, Diamonds, Clubs, Spades
