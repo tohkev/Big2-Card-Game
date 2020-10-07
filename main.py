@@ -321,27 +321,108 @@ def playthrough(previous_player):
                             elif card_to_play_suit.title() == "Hearts":
                                 card_to_play_suit = 3
                             card_to_play = Cardsv2.Card(card_to_play_value, card_to_play_suit)
-                            if card_to_play in currentplayer.hand and (card_to_play.value == lstofcards[0].value or card_to_play_value == lstofcards[0].value + 1 or card_to_play_value == lstofcards[0].value - 1):
+
+                            if card_to_play.value == lstofcards[0].value and card_to_play in currentplayer.hand:
                                 lstofcards.append(card_to_play)
                                 currentplayer.discard(card_to_play.value, card_to_play.suit)
                                 playerchoice2 = True
-                                availablecards =[]
-                                if card_to_play.value == lstofcards[0].value and card_to_play in currentplayer.hand:
+                                availablecards = []
+                                for card in currentplayer.hand:
+                                    if card.value == card_to_play.value:
+                                        availablecards.append(card)
+                                if len(availablecards) == 0:
+                                    print("No other cards to play.")
+                                    centerpile = lstofcards
+                                    print(currentplayer.name + " played: ")
+                                    print(centerpile)
+                                    playerchoice = True
+                                else:
+                                    playerchoice3 = False
+                                    while playerchoice3 == False:
+                                        print(availablecards)
+                                        print("Would you like to play any of the above cards?")
+                                        card_to_play_value = input("Enter the value or 'no':\n").title()
+                                        if card_to_play_value == 'Ace':
+                                            card_to_play_value = 14
+                                        elif card_to_play_value == 'King':
+                                            card_to_play_value = 13
+                                        elif card_to_play_value == 'Queen':
+                                            card_to_play_value = 12
+                                        elif card_to_play_value == 'Jack':
+                                            card_to_play_value = 11
+                                        elif card_to_play_value == "No":
+                                            print("No other cards played.")
+                                            centerpile = lstofcards
+                                            print(currentplayer.name + " played: ")
+                                            print(centerpile)
+                                            playerchoice = True
+                                            break
+                                        else:
+                                            card_to_play_value = int(card_to_play_value)
+                                        card_to_play_suit = input("Enter the suit:\n")
+                                        if card_to_play_suit.title() == "Spades":
+                                            card_to_play_suit = 0
+                                        elif card_to_play_suit.title() == "Clubs":
+                                            card_to_play_suit = 1
+                                        elif card_to_play_suit.title() == "Diamonds":
+                                            card_to_play_suit = 2
+                                        elif card_to_play_suit.title() == "Hearts":
+                                            card_to_play_suit = 3
+                                        card_to_play = Cardsv2.Card(card_to_play_value, card_to_play_suit)
+                                        if card_to_play in availablecards:
+                                            availablecards.remove(card_to_play)
+                                            currentplayer.discard(card_to_play.value, card_to_play.suit)
+                                            lstofcards.append(card_to_play)
+                                            if len(availablecards) == 0:
+                                                playerchoice3 = True
+                                                centerpile = lstofcards
+                                                print("No other cards can be played.")
+                                                print(currentplayer.name + " played: ")
+                                                print(centerpile)
+                                                playerchoice = True
+                                            else:
+                                                playerchoice4 = False
+                                                while playerchoice4 == False:
+                                                    anothercard2 = input("Would you like to play any other cards?")
+                                                    if anothercard2 == 'yes':
+                                                        playerchoice4 = True
+                                                    elif anothercard2 == 'no':
+                                                        playerchoice = True
+                                                        playerchoice3 = True
+                                                        playerchoice4 = True
+                                                        centerpile = lstofcards
+                                                        print(currentplayer.name + " played: ")
+                                                        print(centerpile)
+                                                        break
+                                                    else:
+                                                        print("Invalid choice. Type 'yes' or 'no'.")
+                                        else:
+                                            print("Card entered not a viable play.")
+                            elif card_to_play.value == lstofcards[0].value + 1 or card_to_play.value == lstofcards[0].value - 1 and card_to_play in currentplayer.hand:
+                                lstofcards.append(card_to_play)
+                                currentplayer.discard(card_to_play.value, card_to_play.suit)
+                                playerchoice2 = True
+                                print("You will need to play at least one more card for a valid straight play.")
+                                playerchoice3 = False
+                                while playerchoice3 == False:
+                                    availablecards = []
+                                    maxcard = max(lstofcards, key=attrgetter('value'))
+                                    mincard = min(lstofcards, key=attrgetter('value'))
                                     for card in currentplayer.hand:
-                                        if card.value == card_to_play.value:
+                                        if card.value == maxcard.value + 1 or card.value == mincard.value - 1:
                                             availablecards.append(card)
                                     if len(availablecards) == 0:
-                                        print("No other cards to play.")
-                                        centerpile = lstofcards
-                                        print(currentplayer.name + " played: ")
-                                        print(centerpile)
-                                        playerchoice = True
+                                        print("No other cards can be played.")
+                                        print("Resetting..")
+                                        for card in lstofcards:
+                                            currentplayer.hand.append(card)
+                                        playerchoice3 = True
                                     else:
-                                        playerchoice3 = False
-                                        while playerchoice3 == False:
+                                        playerchoice4 = False
+                                        while playerchoice4 == False:
                                             print(availablecards)
-                                            print("Would you like to play any of the above cards?")
-                                            card_to_play_value = input("Enter the value or 'no':\n").title()
+                                            print("What card would you like to play?")
+                                            card_to_play_value = input("Enter the card value:\n").title()
                                             if card_to_play_value == 'Ace':
                                                 card_to_play_value = 14
                                             elif card_to_play_value == 'King':
@@ -350,16 +431,9 @@ def playthrough(previous_player):
                                                 card_to_play_value = 12
                                             elif card_to_play_value == 'Jack':
                                                 card_to_play_value = 11
-                                            elif card_to_play_value == "No":
-                                                print("No other cards played.")
-                                                centerpile = lstofcards
-                                                print(currentplayer.name + " played: ")
-                                                print(centerpile)
-                                                playerchoice = True
-                                                break
                                             else:
                                                 card_to_play_value = int(card_to_play_value)
-                                            card_to_play_suit = input("Enter the suit:\n")
+                                            card_to_play_suit = input("Enter the card suit:\n").title()
                                             if card_to_play_suit.title() == "Spades":
                                                 card_to_play_suit = 0
                                             elif card_to_play_suit.title() == "Clubs":
@@ -370,157 +444,82 @@ def playthrough(previous_player):
                                                 card_to_play_suit = 3
                                             card_to_play = Cardsv2.Card(card_to_play_value, card_to_play_suit)
                                             if card_to_play in availablecards:
-                                                availablecards.remove(card_to_play)
+                                                playerchoice4 = True
                                                 currentplayer.discard(card_to_play.value, card_to_play.suit)
                                                 lstofcards.append(card_to_play)
-                                                if len(availablecards) == 0:
-                                                    playerchoice3 = True
-                                                    centerpile = lstofcards
-                                                    print("No other cards can be played.")
-                                                    print(currentplayer.name + " played: ")
-                                                    print(centerpile)
-                                                    playerchoice = True
-                                                else:
-                                                    playerchoice4 = False
-                                                    while playerchoice4 == False:
-                                                        anothercard2 = input("Would you like to play any other cards?")
-                                                        if anothercard2 == 'yes':
-                                                            playerchoice4 = True
-                                                        elif anothercard2 == 'no':
-                                                            playerchoice = True
-                                                            playerchoice3 = True
-                                                            playerchoice4 = True
-                                                            centerpile = lstofcards
-                                                            print(currentplayer.name + " played: ")
-                                                            print(centerpile)
-                                                        else:
-                                                            print("Invalid choice. Type 'yes' or 'no'.")
-                                            else:
-                                                print("Card entered not a viable play.")
-                                elif card_to_play.value == lstofcards[0].value + 1 or card_to_play.value == lstofcards[0].value - 1 and card_to_play in currentplayer.hand:
-                                    currentplayer.discard(card_to_play.value, card_to_play.suit)
-                                    print("You will need to play at least one more card for a valid straight play.")
-                                    playerchoice3 = False
-                                    while playerchoice3 == False:
-                                        availablecards = []
-                                        maxcard = max(lstofcards, key=attrgetter('value'))
-                                        mincard = min(lstofcards, key=attrgetter('value'))
-                                        for card in currentplayer.hand:
-                                            if card.value == maxcard.value + 1 or card.value == mincard.value - 1:
-                                                availablecards.append(card)
-                                        if len(availablecards) == 0:
-                                            print("No other cards can be played.")
-                                            print("Resetting..")
-                                            for card in lstofcards:
-                                                currentplayer.hand.append(card)
-                                            playerchoice3 = True
-                                        else:
-                                            playerchoice4 = False
-                                            while playerchoice4 == False:
-                                                print(availablecards)
-                                                print("What card would you like to play?")
-                                                card_to_play_value = input("Enter the card value:\n").title()
-                                                if card_to_play_value == 'Ace':
-                                                    card_to_play_value = 14
-                                                elif card_to_play_value == 'King':
-                                                    card_to_play_value = 13
-                                                elif card_to_play_value == 'Queen':
-                                                    card_to_play_value = 12
-                                                elif card_to_play_value == 'Jack':
-                                                    card_to_play_value = 11
-                                                else:
-                                                    card_to_play_value = int(card_to_play_value)
-                                                card_to_play_suit = input("Enter the card suit:\n").title()
-                                                if card_to_play_suit.title() == "Spades":
-                                                    card_to_play_suit = 0
-                                                elif card_to_play_suit.title() == "Clubs":
-                                                    card_to_play_suit = 1
-                                                elif card_to_play_suit.title() == "Diamonds":
-                                                    card_to_play_suit = 2
-                                                elif card_to_play_suit.title() == "Hearts":
-                                                    card_to_play_suit = 3
-                                                card_to_play = Cardsv2.Card(card_to_play_value, card_to_play_suit)
-                                                if card_to_play in availablecards:
-                                                    playerchoice4 = True
-                                                    currentplayer.discard(card_to_play.value, card_to_play.suit)
-                                                    lstofcards.append(card_to_play)
-                                                    playerchoice5 = False
-                                                    while playerchoice5 == False:
-                                                        anothercard3 = input("Would you like to play another card? (Type 'yes' or 'no')\n").lower()
-                                                        if anothercard3 == "yes":
-                                                            playerchoice6 = False
-                                                            while playerchoice6 == False:
-                                                                availablecards = []
-                                                                maxcard = max(lstofcards, key=attrgetter('value'))
-                                                                mincard = min(lstofcards, key=attrgetter('value'))
-                                                                for card in currentplayer.hand:
-                                                                    if card.value == maxcard.value + 1 or card.value == mincard.value - 1:
-                                                                        availablecards.append(card)
-                                                                if len(availablecards) == 0:
-                                                                    print("No other card to be played!")
-                                                                    centerpile = lstofcards
-                                                                    print(currentplayer.name + " played:")
-                                                                    print(centerpile)
-                                                                    playerchoice6 = True
-                                                                    playerchoice5 = True
-                                                                    playerchoice4 = True
-                                                                    playerchoice3 = True
-                                                                    playerchoice2 = True
-                                                                    playerchoice = True
-                                                                else:
-                                                                    playerchoice7 = False
-                                                                    while playerchoice7 == False:
-                                                                        print(availablecards)
-                                                                        print("What card would you like to play?")
-                                                                        card_to_play_value = input(
-                                                                            "Enter the card value:\n").title()
-                                                                        if card_to_play_value == 'Ace':
-                                                                            card_to_play_value = 14
-                                                                        elif card_to_play_value == 'King':
-                                                                            card_to_play_value = 13
-                                                                        elif card_to_play_value == 'Queen':
-                                                                            card_to_play_value = 12
-                                                                        elif card_to_play_value == 'Jack':
-                                                                            card_to_play_value = 11
-                                                                        else:
-                                                                            card_to_play_value = int(card_to_play_value)
-                                                                        card_to_play_suit = input(
-                                                                            "Enter the card suit:\n").title()
-                                                                        if card_to_play_suit.title() == "Spades":
-                                                                            card_to_play_suit = 0
-                                                                        elif card_to_play_suit.title() == "Clubs":
-                                                                            card_to_play_suit = 1
-                                                                        elif card_to_play_suit.title() == "Diamonds":
-                                                                            card_to_play_suit = 2
-                                                                        elif card_to_play_suit.title() == "Hearts":
-                                                                            card_to_play_suit = 3
-                                                                        card_to_play = Cardsv2.Card(card_to_play_value, card_to_play_suit)
-                                                                        if card_to_play in availablecards:
-                                                                            lstofcards.append(card_to_play)
-                                                                            currentplayer.discard(card_to_play.value, card_to_play.suit)
-                                                                            playerchoice7 = True
-                                                                            playerchoice6 = True
-                                                                        else:
-                                                                            print("Invalid choice. Please select an option on the list of cards to play.")
+                                                playerchoice5 = False
+                                                while playerchoice5 == False:
+                                                    anothercard3 = input("Would you like to play another card? (Type 'yes' or 'no')\n").lower()
+                                                    if anothercard3 == "yes":
+                                                        playerchoice6 = False
+                                                        while playerchoice6 == False:
+                                                            availablecards = []
+                                                            maxcard = max(lstofcards, key=attrgetter('value'))
+                                                            mincard = min(lstofcards, key=attrgetter('value'))
+                                                            for card in currentplayer.hand:
+                                                                if card.value == maxcard.value + 1 or card.value == mincard.value - 1:
+                                                                    availablecards.append(card)
+                                                            if len(availablecards) == 0:
+                                                                print("No other card to be played!")
+                                                                centerpile = lstofcards
+                                                                print(currentplayer.name + " played:")
+                                                                print(centerpile)
+                                                                playerchoice6 = True
+                                                                playerchoice5 = True
+                                                                playerchoice4 = True
+                                                                playerchoice3 = True
+                                                                playerchoice2 = True
+                                                                playerchoice = True
+                                                            else:
+                                                                playerchoice7 = False
+                                                                while playerchoice7 == False:
+                                                                    print(availablecards)
+                                                                    print("What card would you like to play?")
+                                                                    card_to_play_value = input(
+                                                                        "Enter the card value:\n").title()
+                                                                    if card_to_play_value == 'Ace':
+                                                                        card_to_play_value = 14
+                                                                    elif card_to_play_value == 'King':
+                                                                        card_to_play_value = 13
+                                                                    elif card_to_play_value == 'Queen':
+                                                                        card_to_play_value = 12
+                                                                    elif card_to_play_value == 'Jack':
+                                                                        card_to_play_value = 11
+                                                                    else:
+                                                                        card_to_play_value = int(card_to_play_value)
+                                                                    card_to_play_suit = input(
+                                                                        "Enter the card suit:\n").title()
+                                                                    if card_to_play_suit.title() == "Spades":
+                                                                        card_to_play_suit = 0
+                                                                    elif card_to_play_suit.title() == "Clubs":
+                                                                        card_to_play_suit = 1
+                                                                    elif card_to_play_suit.title() == "Diamonds":
+                                                                        card_to_play_suit = 2
+                                                                    elif card_to_play_suit.title() == "Hearts":
+                                                                        card_to_play_suit = 3
+                                                                    card_to_play = Cardsv2.Card(card_to_play_value, card_to_play_suit)
+                                                                    if card_to_play in availablecards:
+                                                                        lstofcards.append(card_to_play)
+                                                                        currentplayer.discard(card_to_play.value, card_to_play.suit)
+                                                                        playerchoice7 = True
+                                                                        playerchoice6 = True
+                                                                    else:
+                                                                        print("Invalid choice. Please select an option on the list of cards to play.")
 
-                                                        elif anothercard3 == "no":
-                                                            centerpile = lstofcards
-                                                            print(currentplayer.name + " played:")
-                                                            print(centerpile)
-                                                            playerchoice5 = True
-                                                            playerchoice3 = True
-                                                            playerchoice4 = True
-                                                            playerchoice2 = True
-                                                            playerchoice = True
-                                                        else:
-                                                            print("Invalid choice. Please type in 'yes' or 'no'.")
+                                                    elif anothercard3 == "no":
+                                                        centerpile = lstofcards
+                                                        print(currentplayer.name + " played:")
+                                                        print(centerpile)
+                                                        playerchoice5 = True
+                                                        playerchoice3 = True
+                                                        playerchoice4 = True
+                                                        playerchoice2 = True
+                                                        playerchoice = True
+                                                    else:
+                                                        print("Invalid choice. Please type in 'yes' or 'no'.")
                                                 else:
                                                     print("Not a valid play. Card not an available card to play.")
 
-                                        #############################################################
-                                else:
-                                    print("Not a valid play. Try again.")
-                                    print("If you are trying to play a straight, you will need to play it in order")
                             else:
                                 print('Not a valid play with your first card. Try again.')
                                 print('If you are trying to play a straight, you will need to play it in order.')
@@ -541,7 +540,7 @@ def playthrough(previous_player):
                     playerchoice = True
             else:
                 print("Card not in hand. Choose another card.")
-    ################################################################
+    
     else:
         single_play = False
         triple_play = False
